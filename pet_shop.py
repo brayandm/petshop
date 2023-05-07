@@ -127,6 +127,7 @@ class PetShop:
                 INSERT INTO petshop.births (father_id, mother_id, children_id, time)
                 VALUES (%s, %s, (SELECT max(id) FROM petshop.pets), NOW());
             """, (father_id, mother_id))
+            self.connection.commit()
         except Exception as exception:
             self.cursor.execute("ROLLBACK;")
             raise exception
