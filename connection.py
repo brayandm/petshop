@@ -1,13 +1,6 @@
 import psycopg2
 
-
 # Connect to the database
 def connect():
-    conn = psycopg2.connect(
-        database="postgres",
-        user="student",
-        password="HSDStoTestDb3711",
-        host="database-1.czcdhgn8biyx.us-east-1.rds.amazonaws.com",
-        port="5432"
-    )
+    conn = psycopg2.connect()
     return conn.cursor(), conn
