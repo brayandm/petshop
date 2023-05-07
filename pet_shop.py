@@ -7,26 +7,29 @@ class PetShop:
         self.cursor = cursor
         self.connection = connection
 
-    def create_pet_type(self, name: str) -> None:
+    def create_pet_type(self, name: str, with_commit: bool = True) -> None:
         create_type_query = """
             INSERT INTO petshop.types (name) VALUES (%s);
         """
         self.cursor.execute(create_type_query, (name,))
-        self.connection.commit()
+        if with_commit:
+            self.connection.commit()
 
-    def create_user(self, email: str, password: str, name: str, balance: float) -> None:
+    def create_user(self, email: str, password: str, name: str, balance: float, with_commit: bool = True) -> None:
         create_user_query = """
             INSERT INTO petshop.users (email, password, name, balance) VALUES (%s, %s, %s, %s);
         """
         self.cursor.execute(create_user_query, (email, password, name, balance))
-        self.connection.commit()
+        if with_commit:
+            self.connection.commit()
 
-    def create_pet(self, owner_id: int, type_id: int, name: str, sex: str) -> None:
+    def create_pet(self, owner_id: int, type_id: int, name: str, sex: str, with_commit: bool = True) -> None:
         create_pet_query = """
             INSERT INTO petshop.pets (owner_id, type_id, name, sex) VALUES (%s, %s, %s, %s);
         """
         self.cursor.execute(create_pet_query, (owner_id, type_id, name, sex))
-        self.connection.commit()
+        if with_commit:
+            self.connection.commit()
 
     def purchase_pet(self, prev_owner_id: int, new_owner_id: int, pet_id: int, amount: float) -> None:
         # Set the transaction isolation level to SERIALIZABLE
@@ -122,7 +125,7 @@ class PetShop:
     def _create_pet_by_birth(self, owner_id: int, type_id: int, name: str, sex: str, father_id: int, mother_id: int):
         self.cursor.execute("BEGIN;")
         try:
-            self.create_pet(owner_id, type_id, name, sex)
+            self.create_pet(owner_id, type_id, name, sex, with_commit=False)
             self.cursor.execute("""
                 INSERT INTO petshop.births (father_id, mother_id, children_id, time)
                 VALUES (%s, %s, (SELECT max(id) FROM petshop.pets), NOW());
