@@ -2,24 +2,24 @@ name: petshop
 channels:
   - defaults
 dependencies:
-  - bzip2=1.0.8=h620ffc9_4
-  - ca-certificates=2023.01.10=hca03da5_0
-  - click=8.0.4=py310hca03da5_0
-  - krb5=1.19.4=h8380606_0
-  - libedit=3.1.20221030=h80987f9_0
-  - libffi=3.4.2=hca03da5_6
-  - libpq=12.9=h65cfe13_3
-  - ncurses=6.4=h313beb8_0
-  - openssl=1.1.1t=h1a28f6b_0
-  - pip=23.0.1=py310hca03da5_0
-  - psycopg2=2.9.3=py310hf27765b_0
-  - python=3.10.11=hc0d8a6c_2
-  - python-dotenv=0.21.0=py310hca03da5_0
-  - readline=8.2=h1a28f6b_0
-  - setuptools=66.0.0=py310hca03da5_0
-  - sqlite=3.41.2=h80987f9_0
-  - tk=8.6.12=hb8d0fd4_0
-  - tzdata=2023c=h04d1e81_0
-  - wheel=0.38.4=py310hca03da5_0
-  - xz=5.4.2=h80987f9_0
-  - zlib=1.2.13=h5a0b063_0
+  - bzip2=1.0.8
+  - ca-certificates=2023.01.10
+  - click=8.0.4
+  - krb5=1.19.4
+  - libedit=3.1.20221030
+  - libffi=3.4.2
+  - libpq=12.9
+  - ncurses=6.4
+  - openssl=1.1.1t
+  - pip=23.0.1
+  - psycopg2=2.9.3
+  - python=3.10.11
+  - python-dotenv=0.21.0
+  - readline=8.2
+  - setuptools=66.0.0
+  - sqlite=3.41.2
+  - tk=8.6.12
+  - tzdata=2023c
+  - wheel=0.38.4
+  - xz=5.4.2
+  - zlib=1.2.13
