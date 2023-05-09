@@ -9,9 +9,9 @@ if __name__ == '__main__':
     database_manager.drop_tables()
     database_manager.create_tables()
 
-    petShop = PetShop(cursor, connection)
+    pet_shop = PetShop(cursor, connection)
 
-    seeder = Seeder(petShop)
+    seeder = Seeder(pet_shop)
 
     seeder.seed()
 
