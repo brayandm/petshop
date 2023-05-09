@@ -1,5 +1,6 @@
 import random
 from typing import List
+from faker import Faker
 
 
 class PetShop:
@@ -78,8 +79,7 @@ class PetShop:
             self.cursor.execute("ROLLBACK;")
             raise e
 
-    def reproduce_pets(self, mother_id: int, father_id: int, female_names: List[str] = None,
-                       male_names: List[str] = None) -> None:
+    def reproduce_pets(self, mother_id: int, father_id: int) -> None:
         self.cursor.execute("""
             SELECT p1.type_id, p1.sex, p1.owner_id, p2.type_id, p2.sex, p2.owner_id
             FROM petshop.pets p1, petshop.pets p2
@@ -105,7 +105,7 @@ class PetShop:
             self._create_pet_by_birth(
                 mother_owner_id,
                 mother_type_id,
-                self._get_name(sex, female_names, male_names),
+                self._get_name(sex),
                 sex,
                 father_id,
                 mother_id
@@ -116,7 +116,7 @@ class PetShop:
             self._create_pet_by_birth(
                 father_owner_id,
                 father_type_id,
-                self._get_name(sex, female_names, male_names),
+                self._get_name(sex),
                 sex,
                 father_id,
                 mother_id
@@ -136,10 +136,13 @@ class PetShop:
             raise exception
 
     @staticmethod
-    def _get_name(sex: str, female_names: List[str], male_names: List[str]) -> str:
-        if sex == 'F' and female_names:
-            return female_names.pop()
-        elif sex == 'M' and male_names:
-            return male_names.pop()
+    def _get_name(sex: str) -> str:
+
+        fake = Faker()
+
+        if sex == 'F':
+            return fake.first_name_female()
+        elif sex == 'M':
+            return fake.first_name_male()
         else:
-            return f"Random {sex}-Pet-{random.randint(10000, 99999)}"
+            assert False, "The gender should be either 'M' or 'F'"
