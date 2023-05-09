@@ -2,6 +2,22 @@ import random
 from typing import List
 from faker import Faker
 
+class User:
+    def __init__(self, id: int, email: str, password: str, name: str, balance: float):
+        self.id = id
+        self.email = email
+        self.password = password
+        self.name = name
+        self.balance = balance
+
+class Pet:
+    def __init__(self, id: int, owner_id: int, type_id: int, name: str, sex: str):
+        self.id = id
+        self.owner_id = owner_id
+        self.type_id = type_id
+        self.name = name
+        self.sex = sex
+
 
 class PetShop:
     def __init__(self, cursor, connection):
@@ -146,3 +162,15 @@ class PetShop:
             return fake.first_name_male()
         else:
             assert False, "The gender should be either 'M' or 'F'"
+
+    def get_user(self, id: int) -> User:
+        self.cursor.execute("SELECT * FROM petshop.users WHERE id = %s;", (id,))
+        return User(*self.cursor.fetchone())
+    
+    def get_user_pets(self, id: int) -> List[Pet]:
+        self.cursor.execute("SELECT * FROM petshop.pets WHERE owner_id = %s;", (id,))
+        return [Pet(*pet) for pet in self.cursor.fetchall()]
+    
+    def get_pet(self, id: int) -> Pet:
+        self.cursor.execute("SELECT * FROM petshop.pets WHERE id = %s;", (id,))
+        return Pet(*self.cursor.fetchone())
