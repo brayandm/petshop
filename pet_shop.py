@@ -49,6 +49,9 @@ class PetShop:
             self.connection.commit()
 
     def purchase_pet(self, prev_owner_id: int, new_owner_id: int, pet_id: int, amount: float) -> None:
+
+        self.connection.commit()
+
         # Set the transaction isolation level to SERIALIZABLE
         self.cursor.execute("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;")
 
