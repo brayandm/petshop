@@ -2,6 +2,7 @@ import random
 from typing import List
 from faker import Faker
 
+
 class User:
     def __init__(self, id: int, email: str, password: str, name: str, balance: float):
         self.id = id
@@ -9,6 +10,7 @@ class User:
         self.password = password
         self.name = name
         self.balance = balance
+
 
 class Pet:
     def __init__(self, id: int, owner_id: int, type_id: int, name: str, sex: str):
@@ -57,7 +59,7 @@ class PetShop:
         if with_commit:
             self.connection.commit()
 
-    def purchase_pet(self, prev_owner_id: int, new_owner_id: int, pet_id: int, amount: float) -> None:
+    def purchase_pet(self, new_owner_id: int, pet_id: int, amount: float) -> None:
 
         self.connection.commit()
 
@@ -70,10 +72,10 @@ class PetShop:
         try:
             # Check if the previous owner is the actual owner of the pet
             self.cursor.execute("SELECT owner_id FROM petshop.pets WHERE id = %s;", (pet_id,))
-            current_owner_id = self.cursor.fetchone()[0]
+            prev_owner_id = self.cursor.fetchone()[0]
 
-            if current_owner_id != prev_owner_id:
-                raise ValueError("The previous owner is not the actual owner of the pet.")
+            if prev_owner_id == new_owner_id:
+                raise ValueError("The new owner is already the owner of the pet.")
 
             # Check if the new owner has enough balance
             self.cursor.execute("SELECT balance FROM petshop.users WHERE id = %s;", (new_owner_id,))

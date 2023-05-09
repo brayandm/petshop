@@ -98,7 +98,6 @@ class Seeder:
                 price = random.randint(0, user.balance)
 
                 self.pet_shop.purchase_pet(
-                    prev_owner_id=pet.owner_id,
                     new_owner_id=user.id,
                     pet_id=pet.id,
                     amount=price
