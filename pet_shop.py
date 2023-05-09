@@ -24,6 +24,15 @@ class PetShop:
         self.cursor = cursor
         self.connection = connection
 
+    def login_user(self, email: str, password: str) -> User | None:
+        login_user_query = """
+            SELECT * FROM petshop.users WHERE email = %s AND password = %s;
+        """
+        self.cursor.execute(login_user_query, (email, password))
+        if self.cursor.rowcount == 0:
+            return None
+        return User(*self.cursor.fetchone())
+
     def create_pet_type(self, name: str, with_commit: bool = True) -> None:
         create_type_query = """
             INSERT INTO petshop.types (name) VALUES (%s);
