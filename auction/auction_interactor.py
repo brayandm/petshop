@@ -5,11 +5,11 @@ from pet_shop import PetShop
 
 
 class AuctionInteractor:
-    def __init__(self, pet_shop: PetShop, redis: Redis):
+    def __init__(self, pet_shop: PetShop, redis: Redis, user_id: int):
         self.pet_shop = pet_shop
         self.redis = redis
         self.auction_manager = AuctionManager(pet_shop=pet_shop, redis=redis)
-        self.user_id = None
+        self.user_id = user_id
 
     def start_auction(self):
         pets = self.pet_shop.get_user_pets(id=self.user_id)
@@ -76,7 +76,6 @@ class AuctionInteractor:
         self.auction_manager.end_auction(pet_id=pet_id)
 
     def start_interaction(self):
-        self.user_id = int(input("Enter your user id: "))
         while True:
             print("1: Start an auction")
             print("2: Place a bid")

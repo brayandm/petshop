@@ -1,10 +1,8 @@
-import time
-
 import connection
-from auction.auction_interactor import AuctionInteractor
 from database_manager import DatabaseManager
 from pet_shop import PetShop
 from seeder import Seeder
+from interactor import Interactor
 
 
 def init():
@@ -30,7 +28,7 @@ if __name__ == '__main__':
 
     redis = connection.connect_to_redis()
 
-    auction_interactor = AuctionInteractor(pet_shop, redis)
-    auction_interactor.start_interaction()
+    interactor = Interactor(pet_shop, redis)
+    interactor.start_interaction()
 
 
