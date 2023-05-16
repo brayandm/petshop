@@ -40,7 +40,7 @@ class AuctionInteractor:
         pets_in_auction = self.__get_pets_in_auctions()
 
         for pet in pets_in_auction:
-            print(f"ID: {pet.id}, Name: {pet.name}")
+            print(f"ID: {pet.id}, Name: {pet.name}, Highest bid: {self.auction_manager.get_highest_bid(pet.id)}")
 
         pet_id = int(input("Enter pet id to bid on: "))
 
@@ -65,7 +65,7 @@ class AuctionInteractor:
         pets_in_auction = self.__get_pets_in_auctions()
 
         for pet in pets_in_auction:
-            print(f"ID: {pet.id}, Name: {pet.name}")
+            print(f"ID: {pet.id}, Name: {pet.name}, Highest bid: {self.auction_manager.get_highest_bid(pet.id)}")
 
         pet_id = int(input("Enter pet id to end auction: "))
 
