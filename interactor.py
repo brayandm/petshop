@@ -31,7 +31,10 @@ class Interactor:
                 AuctionInteractor(self.pet_shop, self.redis, user_id=self.user_id).start_interaction()
                 continue
             elif choice == 2:
-                print("Reproducing pets...");
+                self.reproduce_pets()
                 continue
             elif choice == 3:
                 break
+
+    def reproduce_pets(self):
+        pass
