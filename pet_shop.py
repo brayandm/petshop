@@ -188,3 +188,7 @@ class PetShop:
     def get_pet(self, id: int) -> Pet:
         self.cursor.execute("SELECT * FROM petshop.pets WHERE id = %s;", (id,))
         return Pet(*self.cursor.fetchone())
+    
+    def user_exists(self, id: int) -> bool:
+        self.cursor.execute("SELECT * FROM petshop.users WHERE id = %s;", (id,))
+        return self.cursor.fetchone() is not None

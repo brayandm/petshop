@@ -11,7 +11,16 @@ class Interactor:
         self.redis = redis
 
     def start_interaction(self):
-        self.user_id = int(input("Enter your user id: "))
+
+        while True:
+
+            self.user_id = int(input("Enter your user id: "))
+
+            if not self.pet_shop.user_exists(id=self.user_id):
+                print("No user with that id. Try again.")
+                continue
+
+            break
         
         while True:
             print("1: Go to auctions")
