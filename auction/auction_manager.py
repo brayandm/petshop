@@ -76,3 +76,6 @@ class AuctionManager:
         except KeyboardInterrupt:
             self.pubsub.unsubscribe("petshop_auction_updates")
             print("Unsubscribed from auction updates.")
+
+    def get_highest_bid(self, pet_id: int):
+        return int(self.redis.hget("petshop_auction_{}_data".format(pet_id), "highest_bid").decode())
