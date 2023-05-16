@@ -37,4 +37,41 @@ class Interactor:
                 break
 
     def reproduce_pets(self):
-        pass
+        
+        pets = self.pet_shop.get_user_pets(self.user_id)
+
+        if len(pets) < 2:
+            print("You need to have at least 2 pets to reproduce.")
+            return
+
+        print("Your pets:")
+        for pet in pets:
+            print(f"ID: {pet.id}, Name: {pet.name}, Type: {pet.type_id}, Sex: {pet.sex}")
+
+        pet1_id = int(input("Enter first pet id: "))
+        pet2_id = int(input("Enter second pet id: "))
+
+        if pet1_id not in [pet.id for pet in pets] or pet2_id not in [pet.id for pet in pets]:
+            print("No pet with that id.")
+            return
+
+        if pet1_id == pet2_id:
+            print("You can't reproduce a pet with itself.")
+            return
+
+        pet1 = self.pet_shop.get_pet(id=pet1_id)
+        pet2 = self.pet_shop.get_pet(id=pet2_id)
+
+        if pet1.type_id != pet2.type_id:
+            print("You can't reproduce pets of different types.")
+            return
+        
+        if pet1.sex == pet2.sex:
+            print("You can't reproduce pets of equal sex.")
+            return
+        
+        mother_id = (pet1.id if pet1.sex == 'F' else pet2.id)
+        father_id = (pet1.id if pet1.sex == 'M' else pet2.id)
+
+        self.pet_shop.reproduce_pets(mother_id=mother_id, father_id=father_id)
+        print("Your pets reproduced successfully.")
