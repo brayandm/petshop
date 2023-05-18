@@ -1,14 +1,16 @@
 from redis.client import Redis
 
+from analytics.analytics_manager import AnalyticsManager
 from auction.auction_interactor import AuctionInteractor
 from pet_shop import PetShop
 
 class Interactor:
 
-    def __init__(self, pet_shop: PetShop, redis: Redis):
+    def __init__(self, pet_shop: PetShop, redis: Redis, analytics_manager: AnalyticsManager):
         self.user_id = None
         self.pet_shop = pet_shop
         self.redis = redis
+        self.analytics_manager = analytics_manager
 
     def start_interaction(self):
 
@@ -25,7 +27,8 @@ class Interactor:
         while True:
             print("1: Go to auctions")
             print("2: Reproduce pets")
-            print("3: Exit")
+            print("3: Sync events table for analytics")
+            print("4: Exit")
             choice = int(input("Enter your choice: "))
             if choice == 1:
                 AuctionInteractor(self.pet_shop, self.redis, user_id=self.user_id).start_interaction()
@@ -34,6 +37,11 @@ class Interactor:
                 self.reproduce_pets()
                 continue
             elif choice == 3:
+                self.analytics_manager.populate_events_with_purchases()
+                self.analytics_manager.populate_events_with_births()
+                self.analytics_manager.process_logs_and_insert_to_mart()
+                continue
+            elif choice == 4:
                 break
 
     def reproduce_pets(self):
