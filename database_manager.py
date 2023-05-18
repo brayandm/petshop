@@ -39,6 +39,7 @@ class DatabaseManager:
 
         purchases_table_query = """
         CREATE TABLE IF NOT EXISTS petshop.purchases (
+            id SERIAL PRIMARY KEY,
             prev_owner_id INTEGER REFERENCES petshop.users(id),
             new_owner_id INTEGER REFERENCES petshop.users(id),
             pet_id INTEGER REFERENCES petshop.pets(id),
@@ -49,10 +50,48 @@ class DatabaseManager:
 
         births_table_query = """
         CREATE TABLE IF NOT EXISTS petshop.births (
+            id SERIAL PRIMARY KEY,
             father_id INTEGER REFERENCES petshop.pets(id),
             mother_id INTEGER REFERENCES petshop.pets(id),
             children_id INTEGER REFERENCES petshop.pets(id),
             time TIMESTAMP NOT NULL
+        );
+        """
+
+        events_table_query = """
+        CREATE TABLE IF NOT EXISTS petshop.events (
+            id SERIAL PRIMARY KEY,
+            event_type VARCHAR(255) NOT NULL,
+            original_event_id BIGINT,
+            user_id INTEGER,
+            user_email VARCHAR(255),
+            user_name VARCHAR(255),
+            user_balance NUMERIC(10, 2),
+            prev_owner_id INTEGER,
+            prev_owner_email VARCHAR(255),
+            prev_owner_name VARCHAR(255),
+            prev_owner_balance NUMERIC(10, 2),
+            new_owner_id INTEGER,
+            new_owner_email VARCHAR(255),
+            new_owner_name VARCHAR(255),
+            new_owner_balance NUMERIC(10, 2),
+            father_id INTEGER,
+            father_name VARCHAR(255),
+            father_sex VARCHAR(1),
+            mother_id INTEGER,
+            mother_name VARCHAR(255),
+            mother_sex VARCHAR(1),
+            pet_id INTEGER,
+            pet_name VARCHAR(255),
+            pet_sex VARCHAR(1),
+            children_id INTEGER,
+            children_name VARCHAR(255),
+            children_sex VARCHAR(1),
+            type_id INTEGER,
+            type_name VARCHAR(255),
+            pet_sold BOOLEAN,
+            amount NUMERIC(10, 2),
+            event_time TIMESTAMP NOT NULL
         );
         """
 
@@ -61,9 +100,11 @@ class DatabaseManager:
         self.cursor.execute(pets_table_query)
         self.cursor.execute(purchases_table_query)
         self.cursor.execute(births_table_query)
+        self.cursor.execute(events_table_query)
         self.connection.commit()
 
     def drop_tables(self):
+        self.cursor.execute("DROP TABLE IF EXISTS petshop.events;")
         self.cursor.execute("DROP TABLE IF EXISTS petshop.births;")
         self.cursor.execute("DROP TABLE IF EXISTS petshop.purchases;")
         self.cursor.execute("DROP TABLE IF EXISTS petshop.pets;")
