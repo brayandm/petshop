@@ -21,6 +21,12 @@ class Pet:
         self.sex = sex
 
 
+class PetType:
+    def __init__(self, id: int, name: str):
+        self.id = id
+        self.name = name
+
+
 class PetShop:
     def __init__(self, cursor, connection):
         self.cursor = cursor
@@ -188,6 +194,10 @@ class PetShop:
     def get_pet(self, id: int) -> Pet:
         self.cursor.execute("SELECT * FROM petshop.pets WHERE id = %s;", (id,))
         return Pet(*self.cursor.fetchone())
+
+    def get_pet_type(self, id: int) -> PetType:
+        self.cursor.execute("SELECT * FROM petshop.types WHERE id = %s;", (id,))
+        return PetType(*self.cursor.fetchone())
     
     def user_exists(self, id: int) -> bool:
         self.cursor.execute("SELECT * FROM petshop.users WHERE id = %s;", (id,))
