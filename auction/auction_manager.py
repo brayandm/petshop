@@ -1,3 +1,6 @@
+import json
+from datetime import datetime
+
 import psycopg2
 from redis.client import Redis
 
@@ -9,6 +12,11 @@ class AuctionManager:
         self.pet_shop = pet_shop
         self.redis = redis
         self.pubsub = self.redis.pubsub()
+
+    def log_event(self, event_type, event_data):
+        """Logs the specified event in Redis"""
+        log_entry = {"type": event_type, "data": event_data, "timestamp": datetime.now().timestamp()}
+        self.redis.rpush("petshop_logs", json.dumps(log_entry))
 
     def publish_message_and_print(self, message: str):
         """Publishes message to petshop_auction_updates channel and prints it to console"""
@@ -26,6 +34,9 @@ class AuctionManager:
         self.redis.hset("petshop_auction_{}_data".format(pet_id), "highest_bid", minimum_bid - 1)
         self.redis.hset("petshop_auction_{}_data".format(pet_id), "highest_bidder", 0)
 
+        # Log event
+        self.log_event("AUCTION_STARTED", {"pet_id": pet_id, "minimum_bid": minimum_bid})
+
     def handle_bid(self, pet_id: int, user_id: int, bid_amount: int):
         """Handles bid from user_id for bid_amount"""
         highest_bid = int(self.redis.hget("petshop_auction_{}_data".format(pet_id), "highest_bid").decode())
@@ -41,6 +52,9 @@ class AuctionManager:
             # Save highest_bid and highest_bidder to Redis
             self.redis.hset("petshop_auction_{}_data".format(pet_id), "highest_bid", highest_bid)
             self.redis.hset("petshop_auction_{}_data".format(pet_id), "highest_bidder", highest_bidder)
+
+            # Log event
+            self.log_event("BID", {"pet_id": pet_id, "user_id": user_id, "bid_amount": bid_amount})
         else:
             self.publish_message_and_print(f"User id {user_id} bid of {bid_amount} for pet with id {pet_id} is not high enough")
 
@@ -55,10 +69,16 @@ class AuctionManager:
             try:
                 self.pet_shop.purchase_pet(highest_bidder, pet_id, highest_bid)
                 self.publish_message_and_print(f"Auction ended. Pet with id {pet_id} sold to user id {highest_bidder} for amount {highest_bid}")
+
+                # Log event
+                self.log_event("AUCTION_ENDED", {"pet_id": pet_id, "highest_bidder": highest_bidder, "highest_bid": highest_bid, "sold": True})
             except (ValueError, psycopg2.Error) as e:
                 self.publish_message_and_print(f"Auction ended. Pet with id {pet_id} not sold. Error: {e}")
         else:
             self.publish_message_and_print(f"Auction ended for pet with id: {pet_id}. No bids received.")
+
+            # Log event
+            self.log_event("AUCTION_ENDED", {"pet_id": pet_id, "highest_bidder": highest_bidder, "highest_bid": highest_bid, "sold": False})
 
         # Remove pet_id from petshop_auctions set
         self.redis.srem("petshop_auctions", pet_id)
