@@ -26,10 +26,8 @@ class AnalyticsManager:
                 event_time,
                 prev_owner_email,
                 prev_owner_name,
-                prev_owner_balance,
                 new_owner_email,
                 new_owner_name,
-                new_owner_balance,
                 pet_name,
                 pet_sex,
                 type_id
@@ -44,10 +42,8 @@ class AnalyticsManager:
                 p.date AS event_time,
                 po.email AS prev_owner_email,
                 po.name AS prev_owner_name,
-                po.balance AS prev_owner_balance,
                 no.email AS new_owner_email,
                 no.name AS new_owner_name,
-                no.balance AS new_owner_balance,
                 pt.name AS pet_name,
                 pt.sex AS pet_sex,
                 pt.type_id
@@ -131,7 +127,6 @@ class AnalyticsManager:
         for i in logs:
             # Decode log
             log = json.loads(i)
-            print(log)
 
             event_type = log['type']
             data = log['data']
@@ -187,11 +182,9 @@ class AnalyticsManager:
                 user_id,
                 user_name,
                 user_email,
-                user_balance,
                 new_owner_id,
                 new_owner_name,
                 new_owner_email,
-                new_owner_balance,
                 amount,
                 pet_sold,
                 event_time
@@ -206,11 +199,9 @@ class AnalyticsManager:
                 %(user_id)s,
                 %(user_name)s,
                 %(user_email)s,
-                %(user_balance)s,
                 %(new_owner_id)s,
                 %(new_owner_name)s,
                 %(new_owner_email)s,
-                %(new_owner_balance)s,
                 %(amount)s,
                 %(pet_sold)s,
                 %(event_time)s
@@ -229,11 +220,9 @@ class AnalyticsManager:
             'user_id': user_id,
             'user_name': user.name if user else None,
             'user_email': user.email if user else None,
-            'user_balance': user.balance if user else None,
             'new_owner_id': new_owner_id,
             'new_owner_name': new_owner.name if new_owner else None,
             'new_owner_email': new_owner.email if new_owner else None,
-            'new_owner_balance': new_owner.balance if new_owner else None,
             'amount': amount,
             'pet_sold': pet_sold,
             'event_time': datetime.fromtimestamp(timestamp)

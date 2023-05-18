@@ -32,7 +32,7 @@ def init():
 if __name__ == '__main__':
     (cursor, conn) = connection.connect_to_postgres()
 
-    # init()
+    init()
 
     pet_shop = PetShop(cursor=cursor, connection=conn)
 
