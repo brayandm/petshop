@@ -28,7 +28,8 @@ class Interactor:
             print("1: Go to auctions")
             print("2: Reproduce pets")
             print("3: Sync events table for analytics")
-            print("4: Exit")
+            print("4: Analytic queries")
+            print("5: Exit")
             choice = int(input("Enter your choice: "))
             if choice == 1:
                 AuctionInteractor(self.pet_shop, self.redis, user_id=self.user_id).start_interaction()
@@ -42,6 +43,9 @@ class Interactor:
                 self.analytics_manager.process_logs_and_insert_to_mart()
                 continue
             elif choice == 4:
+                self.analytic_queries()
+                continue
+            elif choice == 5:
                 break
 
     def reproduce_pets(self):
@@ -83,3 +87,15 @@ class Interactor:
 
         self.pet_shop.reproduce_pets(mother_id=mother_id, father_id=father_id)
         print("Your pets reproduced successfully.")
+
+    def analytic_queries(self):
+
+        while True:
+            print("1: amount children per pet")
+            print("2: Exit")
+            choice = int(input("Enter your choice: "))
+            if choice == 1:
+                self.analytics_manager.children_per_pet()
+                continue
+            elif choice == 2:
+                break
