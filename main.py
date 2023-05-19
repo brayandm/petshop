@@ -1,5 +1,6 @@
 import connection
 from analytics.analytics_manager import AnalyticsManager
+from auction.auction_manager import AuctionManager 
 from database_manager import DatabaseManager
 from pet_shop import PetShop
 from seeder import Seeder
@@ -8,25 +9,25 @@ from interactor import Interactor
 
 def init():
     (cursor, conn) = connection.connect_to_postgres()
+    
     database_manager = DatabaseManager(cursor, conn)
     database_manager.drop_tables()
     database_manager.create_tables()
 
-    pet_shop = PetShop(cursor=cursor, connection=conn)
+    redis = connection.connect_to_redis()
+    keys = redis.keys('petshop_*')
+    for key in keys:
+        redis.delete(key)
 
-    seeder = Seeder(pet_shop)
+    pet_shop = PetShop(cursor=cursor, connection=conn)
+    auction_manager = AuctionManager(pet_shop, redis)
+
+    seeder = Seeder(pet_shop, auction_manager)
 
     seeder.seed()
 
     cursor.execute("SELECT * FROM petshop.users;")
     print(cursor.fetchall())
-
-    redis = connection.connect_to_redis()
-
-    keys = redis.keys('petshop_*')
-
-    for key in keys:
-        redis.delete(key)
 
 
 if __name__ == '__main__':
