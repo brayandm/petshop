@@ -95,10 +95,14 @@ class Interactor:
 
         while True:
             print("1: amount children per pet")
-            print("2: Exit")
+            print("2: total money transfer last week")
+            print("3: Exit")
             choice = int(input("Enter your choice: "))
             if choice == 1:
                 self.analytics_querier.children_per_pet()
                 continue
-            elif choice == 2:
+            if choice == 2:
+                self.analytics_querier.total_money_transfer_last_week()
+                continue
+            elif choice == 3:
                 break

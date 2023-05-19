@@ -33,3 +33,14 @@ class AnalyticsQuerier:
 
         self.cursor.execute(query)
         print(self.cursor.fetchall())
+
+    def total_money_transfer_last_week(self):
+
+        query = """
+            SELECT sum(amount) AS total_money_transfer_last_week
+            FROM petshop.events
+            WHERE event_time >= CURRENT_TIMESTAMP - INTERVAL '1 week';
+        """
+
+        self.cursor.execute(query)
+        print(self.cursor.fetchall())
