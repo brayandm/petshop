@@ -1,16 +1,20 @@
-from pet_shop import PetShop 
+from pet_shop import PetShop
+from auction.auction_manager import AuctionManager 
 from faker import Faker
 import random
 
 class Seeder:
 
-    def __init__(self, petShop: PetShop):
-        self.pet_shop = petShop
+    def __init__(self, pet_shop: PetShop, auction_manager: AuctionManager):
+        self.pet_shop = pet_shop
+        self.auction_manager = auction_manager
         self.pet_types = ["Dog", "Cat", "Bird"]
         self.number_of_users = 10
         self.number_of_pets = 30
         self.number_of_births = 20
         self.number_of_purchases = 20
+        self.number_of_auctions = 10
+        self.number_max_bids = 10
         self.max_money = 1000
         self.pets = {}
 
@@ -21,6 +25,7 @@ class Seeder:
         self.seed_pets()
         self.seed_births()
         self.seed_purchases()
+        self.seed_auctions()
 
     def seed_types(self):
 
@@ -104,3 +109,39 @@ class Seeder:
                 )
 
                 break
+
+    def seed_auctions(self):
+
+        for _ in range(self.number_of_auctions):
+
+            pets = self.pet_shop.get_pets()
+            users = self.pet_shop.get_users()
+
+            pet = pets[random.randint(1, len(pets)) - 1]
+
+            user = self.pet_shop.get_user(pet.owner_id)
+
+            if user.balance == 0:
+                continue
+
+            current_price = random.randint(1, user.balance)
+
+            self.auction_manager.start_auction(pet.id, current_price)
+
+            for _ in range(random.randint(1, self.number_max_bids)):
+
+                bidder = users[random.randint(1, len(users)) - 1]
+
+                if bidder.id == user.id:
+                    continue
+
+                if bidder.balance <= current_price:
+                    continue
+
+                new_price = random.randint(current_price + 1, bidder.balance)
+
+                self.auction_manager.handle_bid(pet.id, bidder.id, new_price)
+
+                current_price = new_price
+
+            self.auction_manager.end_auction(pet.id)
