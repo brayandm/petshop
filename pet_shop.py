@@ -191,9 +191,17 @@ class PetShop:
         self.cursor.execute("SELECT * FROM petshop.pets WHERE owner_id = %s;", (id,))
         return [Pet(*pet) for pet in self.cursor.fetchall()]
     
+    def get_users(self) -> List[User]:
+        self.cursor.execute("SELECT * FROM petshop.users;")
+        return [User(*user) for user in self.cursor.fetchall()]
+    
     def get_pet(self, id: int) -> Pet:
         self.cursor.execute("SELECT * FROM petshop.pets WHERE id = %s;", (id,))
         return Pet(*self.cursor.fetchone())
+    
+    def get_pets(self) -> List[Pet]:
+        self.cursor.execute("SELECT * FROM petshop.pets;")
+        return [Pet(*pet) for pet in self.cursor.fetchall()]
 
     def get_pet_type(self, id: int) -> PetType:
         self.cursor.execute("SELECT * FROM petshop.types WHERE id = %s;", (id,))
