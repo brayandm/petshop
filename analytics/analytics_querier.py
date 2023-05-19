@@ -44,3 +44,22 @@ class AnalyticsQuerier:
 
         self.cursor.execute(query)
         print(self.cursor.fetchall())
+
+    def purchase_count_per_user(self):
+
+        query = """
+            SELECT 
+                new_owner_id AS user_id,
+                new_owner_name AS user_name,
+                COUNT(pet_id) AS purchase_count
+            FROM
+                petshop.events
+            WHERE
+                event_type = 'PET_PURCHASED'
+            GROUP BY
+                new_owner_id,
+                new_owner_name
+        """
+
+        self.cursor.execute(query)
+        print(self.cursor.fetchall())
