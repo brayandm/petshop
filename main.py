@@ -1,5 +1,6 @@
 import connection
 from analytics.analytics_manager import AnalyticsManager
+from analytics.analytics_querier import AnalyticsQuerier
 from auction.auction_manager import AuctionManager 
 from database_manager import DatabaseManager
 from pet_shop import PetShop
@@ -40,8 +41,9 @@ if __name__ == '__main__':
     redis = connection.connect_to_redis()
 
     analytics_manager = AnalyticsManager(cursor=cursor, connection=conn, redis=redis, pet_shop=pet_shop)
+    analytics_querier = AnalyticsQuerier(cursor=cursor, connection=conn)
 
-    interactor = Interactor(pet_shop, redis, analytics_manager)
+    interactor = Interactor(pet_shop, redis, analytics_manager, analytics_querier)
     interactor.start_interaction()
 
     cursor.execute("SELECT * FROM petshop.events;")

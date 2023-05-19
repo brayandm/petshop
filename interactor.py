@@ -1,16 +1,19 @@
 from redis.client import Redis
 
 from analytics.analytics_manager import AnalyticsManager
+from analytics.analytics_querier import AnalyticsQuerier
 from auction.auction_interactor import AuctionInteractor
 from pet_shop import PetShop
 
 class Interactor:
 
-    def __init__(self, pet_shop: PetShop, redis: Redis, analytics_manager: AnalyticsManager):
+    def __init__(self, pet_shop: PetShop, redis: Redis, analytics_manager: AnalyticsManager, analytics_querier: AnalyticsQuerier):
         self.user_id = None
         self.pet_shop = pet_shop
         self.redis = redis
         self.analytics_manager = analytics_manager
+        self.analytics_querier = analytics_querier        
+
 
     def start_interaction(self):
 
@@ -95,7 +98,7 @@ class Interactor:
             print("2: Exit")
             choice = int(input("Enter your choice: "))
             if choice == 1:
-                self.analytics_manager.children_per_pet()
+                self.analytics_querier.children_per_pet()
                 continue
             elif choice == 2:
                 break
